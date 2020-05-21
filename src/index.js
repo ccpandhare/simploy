@@ -1,4 +1,5 @@
 const express = require('express');
+const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const lowdb = require('lowdb');
 const FileSync = require('lowdb/adapters/FileSync');
@@ -10,7 +11,9 @@ const adapter = new FileSync('db.json');
 const db = lowdb(adapter);
 const port = 5000;
 const app = express();
+
 app.use(bodyParser.json());
+app.use(morgan('dev'));
 
 const useDb = fn => (req, res) => fn(req, res, db);
 
