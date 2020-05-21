@@ -1,6 +1,7 @@
 const util = require('util');
 const fs = require('fs');
 const shell = require('shelljs');
+const {join} = require('path');
 
 const genExec = cmd =>
 	util.promisify((cmd, cb) =>
@@ -14,35 +15,34 @@ const genExec = cmd =>
 
 module.exports = (path, sha) => {
 	return new Promise(async (resolve, reject) => {
-		const outputs = [];
+		const outputs = [{command: 'setup'}];
 		try {
-			if (!shell.which('git')) {
-				outputs.push({command: 'which git'});
-				throw new Error('Git not available');
-			}
-			shell.pushd(path);
+			if (!shell.which('git')) throw new Error('Git not available');
+			shell.cd(path);
 			const config = JSON.parse(
 				fs.readFileSync(`ghwh-deploy.json`, {
 					encoding: 'utf-8',
 				})
 			);
-			const {commands} = config;
-			commands.unshift(
+			const commands = [
 				'git checkout master',
 				'git pull origin master',
-				`git checkout ${sha}`
-			);
+				`git checkout ${sha}`,
+				...config.commands,
+			];
 			for (let command of commands) {
 				if (typeof command !== 'string') continue;
 				outputs.push({command});
 				const output = await genExec(command);
 				outputs[outputs.length - 1] = {command, ...output};
 			}
+			shell.exec('git checkout master');
 			resolve(outputs);
-			shell.popd();
+			shell.cd(join(__dirname, '../'));
 		} catch (err) {
+			shell.exec('git checkout master');
 			outputs.push(Object.assign(outputs.pop(), err));
-			shell.popd();
+			shell.cd(join(__dirname, '../'));
 			reject(outputs);
 		}
 	});

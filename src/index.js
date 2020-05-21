@@ -1,3 +1,4 @@
+const path = require('path');
 const express = require('express');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
@@ -7,7 +8,7 @@ const FileSync = require('lowdb/adapters/FileSync');
 const handleRequest = require('./handleRequest');
 const renderBadge = require('./renderBadge');
 
-const adapter = new FileSync('db.json');
+const adapter = new FileSync(path.join(__dirname, '../db.json'));
 const db = lowdb(adapter);
 const port = 5000;
 const app = express();
