@@ -1,8 +1,7 @@
-import {lstatSync} from 'fs';
+const fs = require('fs');
 
-import run from './run.js';
-
-import filterPayload from './filterPayload.js';
+const run = require('./run.js');
+const filterPayload = require('./filterPayload.js');
 
 const STATES = ['pending', 'success', 'failure', 'error'];
 
@@ -15,7 +14,7 @@ const sendErrorMessage = (message, res, name, db) => {
 	res.status(400).send({message});
 };
 
-export default (req, res, db) => {
+module.exports = (req, res, db) => {
 	if (
 		STATES.indexOf(req.body.state) !== -1 &&
 		typeof req.body.name === 'string'
@@ -26,7 +25,7 @@ export default (req, res, db) => {
 			// Check if a local directory is linked
 			let isDir = false;
 			try {
-				isDir = lstatSync(db.get(payload.name).value().path).isDirectory();
+				isDir = fs.lstatSync(db.get(payload.name).value().path).isDirectory();
 			} catch (err) {
 				// Local dir no longer exists
 			}

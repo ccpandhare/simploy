@@ -1,4 +1,4 @@
-export default payload => ({
+module.exports = payload => ({
 	sha: payload.sha,
 	target_url: payload.target_url,
 	avatar_url: payload.avatar_url,

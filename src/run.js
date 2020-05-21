@@ -1,6 +1,6 @@
-import util from 'util';
-import fs from 'fs';
-import shell from 'shelljs';
+const util = require('util');
+const fs = require('fs');
+const shell = require('shelljs');
 
 const genExec = cmd =>
 	util.promisify((cmd, cb) =>
@@ -12,7 +12,7 @@ const genExec = cmd =>
 		})
 	)(cmd);
 
-export default (path, sha) => {
+module.exports = (path, sha) => {
 	return new Promise(async (resolve, reject) => {
 		const outputs = [];
 		try {

@@ -1,9 +1,7 @@
-import path from 'path';
-import {fileURLToPath} from 'url';
+const path = require('path');
+const url = require('url');
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-
-export default (req, res, db) => {
+module.exports = (req, res, db) => {
 	const name = req.query.name;
 	let file = 'untracked.svg';
 	if (typeof name === 'string' && db.get(name).value() != null) {

@@ -1,9 +1,10 @@
-import lowdb from 'lowdb';
-import FileSync from 'lowdb/adapters/FileSync.js';
-import express from 'express';
-import bodyParser from 'body-parser';
-import handleRequest from './handleRequest.js';
-import renderBadge from './renderBadge.js';
+const express = require('express');
+const bodyParser = require('body-parser');
+const lowdb = require('lowdb');
+const FileSync = require('lowdb/adapters/FileSync');
+
+const handleRequest = require('./handleRequest');
+const renderBadge = require('./renderBadge');
 
 const adapter = new FileSync('db.json');
 const db = lowdb(adapter);

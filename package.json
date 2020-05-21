@@ -7,7 +7,6 @@
 		"dev": "nodemon src/index.js --ignore db.json",
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
-	"type": "module",
 	"author": "Chinmay Pandhare",
 	"license": "ISC",
 	"dependencies": {
