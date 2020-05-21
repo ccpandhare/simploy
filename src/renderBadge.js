@@ -10,7 +10,7 @@ module.exports = (req, res, db) => {
 			case 'deployed':
 				file = 'deployed.svg';
 				break;
-			case 'undeployed':
+			case 'not-deployed':
 				file = 'deploy_failed.svg';
 				break;
 			case 'success':
