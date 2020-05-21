@@ -1,0 +1,28 @@
+{
+    "env": {
+        "node": true,
+        "jest": true,
+        "es2020": true
+    },
+    "parserOptions": {
+        "ecmaVersion": 2020,
+        "sourceType": "module"
+    },
+    "rules": {
+        "semi": "error",
+        "for-direction": "error",
+        "no-dupe-keys": "error",
+        "no-invalid-regexp": "error",
+        "complexity": "off",
+        "consistent-return": "error",
+        "dot-location": "error",
+        "eqeqeq": "error",
+        "no-caller": "error",
+        "no-eval": "error",
+        "arrow-parens": "off",
+        "arrow-body-style": "off",
+        "spaced-comment": "warn",
+        "brace-style": "1tbs",
+        "no-unneeded-ternary": "warn"
+    }
+}
