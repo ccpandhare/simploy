@@ -1,0 +1,51 @@
+<html>
+
+<head>
+    <title>GHWH Deploy Panel</title>
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&display=swap"
+        rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
+</head>
+
+<body>
+    <header>GHWH Deploy Panel</header>
+    <section>
+        <label id="repo">$repo...</label>
+        <img id="badge" alt="$badge..." />
+        <label id="state" class="capitalize">$state...</label>
+        <label id="message" class="capitalize">$message...</label>
+        <p id="output">$output...</p>
+    </section>
+    <script>
+        const toggleDataShown = e => {
+            const li = e.currentTarget;
+            li.setAttribute('data-shown', 1 - li.getAttribute('data-shown'));
+        };
+        fetch(`/ghwh-data/${location.search}`)
+            .then(async response => {
+                const name = new URL(location).searchParams.get('name');
+                const data = await response.json();
+                if (data.error) {
+                    repo.innerHTML = `Repo ${name} not linked to GHWH Deploy`;
+                    repo.className = "error";
+                } else {
+                    repo.innerHTML = `Repo: ${name}`;
+                    badge.src = `/ghwh-badge/${location.search}`;
+                    state.innerHTML = `State: ${data.state}`;
+                    message.innerHTML = `Message: ${data.message}`;
+                    output.innerHTML = 'Last output: (click on command to see stdout/err) <br /><ul>';
+                    data.outputs.forEach(op => {
+                        output.innerHTML += `
+                        <li class="command exitcode${op.code}" data-shown="0" onclick="toggleDataShown(event)">
+                            ${op.command}
+                            <pre>exit code: ${op.code}\n\nstdout: \n${op.stdout || ''} \nstderr:\n${op.stderr || ''}</pre>
+                        </li>`;
+                    })
+                    output.innerHTML += '</ul>';
+                }
+            })
+            .catch(console.error);
+    </script>
+</body>
+
+</html>

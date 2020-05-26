@@ -7,6 +7,7 @@ const FileSync = require('lowdb/adapters/FileSync');
 
 const handleRequest = require('./handleRequest');
 const renderBadge = require('./renderBadge');
+const getData = require('./getData');
 const linkDirectory = require('./linkDirectory');
 
 const adapter = new FileSync(path.join(__dirname, '../db.json'));
@@ -23,7 +24,11 @@ app.post('/ghwh-deploy', useDb(handleRequest));
 
 app.get('/ghwh-badge', useDb(renderBadge));
 
+app.get('/ghwh-data', useDb(getData));
+
 app.post('/ghwh-link', useDb(linkDirectory));
+
+app.use(express.static('public'));
 
 app.listen(port, () => {
 	console.log(`ghwh-deploy listening at port ${port}.`);

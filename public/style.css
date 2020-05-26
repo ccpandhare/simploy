@@ -1,0 +1,83 @@
+* {
+    margin: 0;
+    padding: 0;
+    font-family: 'Courier Prime', monospace;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    width: 100vw;
+    min-width: 100vh;
+}
+
+:root {
+    --purple: #c678dd;
+    --error: #f44747;
+    --coral: #e06c75;
+    --whiskey: #d19a66;
+    --chalky: #e5c07b;
+    --lightDark: #7f848e;
+    --dark: #5c6370;
+    --background: #282c34;
+    --malibu: #61afef;
+    --green: #4af626;
+    --fountainBlue: #56b6c2;
+    --text: #ffffff;
+}
+
+body {
+    background: var(--background);
+    color: var(--text);
+    font-size: 20px;
+    padding: 20px 30px;
+    overflow-x: hidden;
+}
+
+header {
+    width: 100vw;
+    color: var(--malibu);
+    font-size: 50px;
+    padding: 10px 0;
+}
+
+section {
+    padding: 0 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+section>* {
+    margin: 5px 0;
+}
+
+pre {
+    color: var(--lightDark);
+    margin-left: 30px;
+}
+
+li {
+    cursor: pointer;
+}
+
+li[data-shown="0"]>pre {
+    display: none;
+}
+
+.error {
+    color: var(--error);
+}
+
+.capitalize {
+    text-transform: capitalize;
+}
+
+.command {
+    color: var(--error);
+}
+
+.command.exitcodeundefined,
+.command.exitcode0 {
+    color: var(--green);
+}
