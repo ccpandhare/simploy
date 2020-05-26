@@ -13,42 +13,73 @@ const genExec = cmd =>
 		})
 	)(cmd);
 
-module.exports = (path, sha) => {
+const readCommandsFromJSON = () => {
+	if (fs.existsSync('ghwh-deploy.json')) {
+		return [
+			...JSON.parse(fs.readFileSync('ghwh-deploy.json', {encoding: 'utf-8'}))
+				.commands,
+			'getFinishingCommands',
+		];
+	} else {
+		return ['getFinishingCommands'];
+	}
+};
+
+const getFinishingCommands = () => ['git checkout master'];
+
+const createOutputObjectsFromCommands = commands => {
+	return commands.map(command => ({command}));
+};
+
+module.exports = (db, name, sha) => {
 	return new Promise(async (resolve, reject) => {
-		const outputs = [{command: 'setup'}];
+		const path = db.get(name).value().path;
+		const commands = [
+			'which git',
+			`changeDirectoryToRepo`,
+			'git checkout master',
+			'git pull origin master',
+			`git checkout ${sha}`,
+			'readCommandsFromJSON',
+		];
+		const outputs = createOutputObjectsFromCommands(commands);
+		const saveOutputs = _ => db.set(`${name}.outputs`, outputs).write();
+		saveOutputs();
+		let op;
 		try {
-			if (!shell.which('git')) throw new Error('Git not available');
-			shell.cd(path);
-			const setupCommands = [
-				'git checkout master',
-				'git pull origin master',
-				`git checkout ${sha}`,
-			];
-			for (let command of setupCommands) {
-				if (typeof command !== 'string') continue;
-				outputs.push({command});
-				const output = await genExec(command);
-				outputs[outputs.length - 1] = {command, ...output};
+			for (op of outputs) {
+				const {command} = op;
+				if (command === 'readCommandsFromJSON') {
+					// read commands from the JSON config file
+					outputs.push(
+						...createOutputObjectsFromCommands(readCommandsFromJSON())
+					);
+				} else if (command === 'getFinishingCommands') {
+					outputs.push(
+						...createOutputObjectsFromCommands(getFinishingCommands())
+					);
+				} else if (command === 'changeDirectoryToRepo') {
+					// shell.exec(cd) doesn't persist the new directory
+					shell.cd(path);
+					op.code = 0;
+				} else {
+					// coerce to string and run
+					const output = await genExec(`${command}`);
+					Object.assign(op, output);
+				}
+				saveOutputs();
 			}
-			const config = JSON.parse(
-				fs.readFileSync(`ghwh-deploy.json`, {
-					encoding: 'utf-8',
-				})
-			);
-			for (let command of config.commands) {
-				if (typeof command !== 'string') continue;
-				outputs.push({command});
-				const output = await genExec(command);
-				outputs[outputs.length - 1] = {command, ...output};
-			}
-			shell.exec('git checkout master');
-			resolve(outputs);
+			// reset to catch any non-command errors and avoid overriding a command's output
+			op = null;
+			resolve();
 			shell.cd(join(__dirname, '../'));
 		} catch (err) {
 			shell.exec('git checkout master');
-			outputs.push(Object.assign(outputs.pop(), err));
+			op = op || {command: 'unknown'};
+			Object.assign(op, err);
+			saveOutputs();
 			shell.cd(join(__dirname, '../'));
-			reject(outputs);
+			reject(op);
 		}
 	});
 };

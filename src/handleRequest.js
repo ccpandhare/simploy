@@ -14,22 +14,18 @@ const sendErrorMessage = (message, res, name, db) => {
 
 const deploy = (payload, db) => {
 	const {name, sha} = payload;
-	run(db.get(name).value().path, sha)
-		.then(outputs => {
+	run(db, name, sha)
+		.then(_ => {
 			db.set(`${name}.state`, 'deployed')
 				.set(`${name}.message`, 'Deployed Successfully')
-				.set(`${name}.outputs`, outputs)
 				.write();
 		})
-		.catch(outputs => {
+		.catch(failedCommand => {
 			db.set(`${name}.state`, 'not-deployed')
 				.set(
 					`${name}.message`,
-					`Failed to deploy. ${
-						outputs[outputs.length - 1].command
-					} returned a non-zero exit code.`
+					`Failed to deploy. ${failedCommand.command} returned non-zero exit code ${failedCommand.code}.`
 				)
-				.set(`${name}.outputs`, outputs)
 				.write();
 		});
 };
