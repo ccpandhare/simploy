@@ -39,7 +39,7 @@
                         output.innerHTML += `
                         <li class="command exitcode${op.code}" data-shown="0" onclick="toggleDataShown(event)">
                             ${op.command}
-                            <pre>exit code: ${op.code}\n\nstdout: \n${op.stdout || ''} \nstderr:\n${op.stderr || ''}</pre>
+                            <pre onclick="event.stopPropagation()">exit code: ${op.code}\n\nstdout: \n${op.stdout || ''} \nstderr:\n${op.stderr || ''}</pre>
                         </li>`;
                     })
                     output.innerHTML += '</ul>';
