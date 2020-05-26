@@ -63,7 +63,7 @@ module.exports = async (req, res, db) => {
 	if (event === 'status') {
 		try {
 			const payload = await filterStatusPayload(req.body);
-			const {name, state} = payload;
+			const {name, state, description} = payload;
 			makeSureDirIsValid(name, db);
 			prependEvent(payload, name, db);
 			res.send({
