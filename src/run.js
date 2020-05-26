@@ -19,18 +19,23 @@ module.exports = (path, sha) => {
 		try {
 			if (!shell.which('git')) throw new Error('Git not available');
 			shell.cd(path);
+			const setupCommands = [
+				'git checkout master',
+				'git pull origin master',
+				`git checkout ${sha}`,
+			];
+			for (let command of setupCommands) {
+				if (typeof command !== 'string') continue;
+				outputs.push({command});
+				const output = await genExec(command);
+				outputs[outputs.length - 1] = {command, ...output};
+			}
 			const config = JSON.parse(
 				fs.readFileSync(`ghwh-deploy.json`, {
 					encoding: 'utf-8',
 				})
 			);
-			const commands = [
-				'git checkout master',
-				'git pull origin master',
-				`git checkout ${sha}`,
-				...config.commands,
-			];
-			for (let command of commands) {
+			for (let command of config.commands) {
 				if (typeof command !== 'string') continue;
 				outputs.push({command});
 				const output = await genExec(command);
