@@ -21,7 +21,7 @@
             const li = e.currentTarget;
             li.setAttribute('data-shown', 1 - li.getAttribute('data-shown'));
         };
-        fetch(`/ghwh-data/${location.search}`)
+        fetch(`${location.origin}${location.pathname}ghwh-data/${location.search}`)
             .then(async response => {
                 const name = new URL(location).searchParams.get('name');
                 const data = await response.json();
