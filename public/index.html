@@ -21,7 +21,8 @@
             const li = e.currentTarget;
             li.setAttribute('data-shown', 1 - li.getAttribute('data-shown'));
         };
-        fetch(`${location.origin}${location.pathname}ghwh-data/${location.search}`)
+        const APIURL = `${location.origin}${location.pathname}`;
+        fetch(`${APIURL}ghwh-data/${location.search}`)
             .then(async response => {
                 const name = new URL(location).searchParams.get('name');
                 const data = await response.json();
@@ -30,7 +31,7 @@
                     repo.className = "error";
                 } else {
                     repo.innerHTML = `Repo: ${name}`;
-                    badge.src = `/ghwh-badge/${location.search}`;
+                    badge.src = `${APIURL}ghwh-badge/${location.search}`;
                     state.innerHTML = `State: ${data.state}`;
                     message.innerHTML = `Message: ${data.message}`;
                     output.innerHTML = 'Last output: (click on command to see stdout/err) <br /><ul>';
