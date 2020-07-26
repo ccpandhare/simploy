@@ -20,16 +20,16 @@ app.use(morgan('dev'));
 
 const useDb = fn => (req, res) => fn(req, res, db);
 
-app.post('/ghwh-deploy', useDb(handleRequest));
+app.post('/simploy', useDb(handleRequest));
 
-app.get('/ghwh-badge', useDb(renderBadge));
+app.get('/simploy-badge', useDb(renderBadge));
 
-app.get('/ghwh-data', useDb(getData));
+app.get('/simploy-data', useDb(getData));
 
-app.post('/ghwh-link', useDb(linkDirectory));
+app.post('/simploy-link', useDb(linkDirectory));
 
 app.use(express.static('public'));
 
 app.listen(port, () => {
-	console.log(`ghwh-deploy listening at port ${port}.`);
+	console.log(`simploy listening at port ${port}.`);
 });

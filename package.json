@@ -1,11 +1,11 @@
 {
-	"name": "ghwh-deploy",
+	"name": "simploy",
 	"version": "1.0.0",
 	"description": "Deploy GitHub code using GitHub Webhooks and run actions",
 	"main": "src/index.js",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/ccpandhare/ghwh-deploy.git"
+		"url": "https://github.com/ccpandhare/simploy.git"
 	},
 	"scripts": {
 		"dev": "nodemon src/index.js --ignore db.json",

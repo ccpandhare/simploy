@@ -1,14 +1,14 @@
 <html>
 
 <head>
-    <title>GHWH Deploy Panel</title>
+    <title>Simploy Panel</title>
     <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&display=swap"
         rel="stylesheet">
     <link href="style.css" rel="stylesheet">
 </head>
 
 <body>
-    <header>GHWH Deploy Panel</header>
+    <header>Simploy Panel</header>
     <section>
         <label id="repo">$repo...</label>
         <img id="badge" alt="$badge..." />
@@ -24,16 +24,16 @@
             li.setAttribute('data-shown', 1 - li.getAttribute('data-shown'));
         };
         const APIURL = `${location.origin}${location.pathname}`;
-        fetch(`${APIURL}ghwh-data/${location.search}`)
+        fetch(`${APIURL}simploy-data/${location.search}`)
             .then(async response => {
                 const name = new URL(location).searchParams.get('name');
                 const data = await response.json();
                 if (data.error) {
-                    repo.innerHTML = `Repo ${name} not linked to GHWH Deploy`;
+                    repo.innerHTML = `Repo ${name} not linked to Simploy`;
                     repo.className = "error";
                 } else {
                     repo.innerHTML = `Repo: ${name}`;
-                    badge.src = `${APIURL}ghwh-badge/${location.search}`;
+                    badge.src = `${APIURL}simploy-badge/${location.search}`;
                     date.innerHTML = `${new Date(data.events[0].date)}`;
                     commitMessage.innerHTML =
                         `Last Commit Message: ${data.events[0].latestCommit && data.events[0].latestCommit.message}`;
