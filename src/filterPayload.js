@@ -5,6 +5,13 @@ const filterStatusPayload = payload => {
 				type: 'status',
 				sha: payload.sha,
 				name: payload.repository.full_name,
+				date: +new Date(),
+				latestCommit: payload.commit
+					? {
+							sha: payload.commit.sha,
+							message: payload.commit.commit && payload.commit.commit.message,
+					  }
+					: null,
 				target_url: payload.target_url,
 				state: payload.state,
 				description: payload.description,
@@ -31,8 +38,17 @@ const filterPushPayload = payload => {
 		try {
 			resolve({
 				type: 'push',
+				state: 'success',
 				name: payload.repository.full_name,
+				after: payload.after,
+				latestCommit: payload.commits
+					.filter(({id}) => id === payload.after)
+					.map(({id, message}) => ({
+						id,
+						message,
+					}))[0],
 				sha: payload.after,
+				date: +new Date(),
 				sender: {
 					login: payload.sender.login,
 					avatar_url: payload.sender.avatar_url,

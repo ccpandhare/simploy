@@ -12,8 +12,10 @@
     <section>
         <label id="repo">$repo...</label>
         <img id="badge" alt="$badge..." />
+        <label id="date">$date...</label>
         <label id="state" class="capitalize">$state...</label>
         <label id="message" class="capitalize">$message...</label>
+        <label id="commitMessage">$commitMessage</label>
         <p id="output">$output...</p>
     </section>
     <script>
@@ -32,6 +34,9 @@
                 } else {
                     repo.innerHTML = `Repo: ${name}`;
                     badge.src = `${APIURL}ghwh-badge/${location.search}`;
+                    date.innerHTML = `${new Date(data.events[0].date)}`;
+                    commitMessage.innerHTML =
+                        `Last Commit Message: ${data.events[0].latestCommit && data.events[0].latestCommit.message}`;
                     state.innerHTML = `State: ${data.state}`;
                     message.innerHTML = `Message: ${data.message}`;
                     output.innerHTML = 'Last output: (click on command to see stdout/err) <br /><ul>';
