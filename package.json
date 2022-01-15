@@ -26,6 +26,6 @@
 		"morgan": "^1.10.0",
 		"nodemon": "^2.0.4",
 		"prettier": "^2.0.5",
-		"shelljs": "^0.8.4"
+		"shelljs": "^0.8.5"
 	}
 }
